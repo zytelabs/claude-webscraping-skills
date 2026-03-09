@@ -1,6 +1,6 @@
 # claude-webscraping-skills
 
-A collection of awesome Claude skills and other tools to assist your web-scraping needs. 
+A collection of claude skills and other tools to assist your web-scraping needs. 
 
 ----
 
