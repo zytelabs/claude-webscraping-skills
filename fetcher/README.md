@@ -1,115 +1,82 @@
-# fetcher
+# fetcher skill
 
-Fetches raw HTML from a URL using httpx, with automatic fallback to Zyte API if blocked.
+A Claude skill that fetches raw HTML from a URL using httpx, with automatic fallback to Zyte API if blocked.
 
 ## Overview
 
-`fetcher.py` is a single-file HTML retrieval script designed to be the first step in a scraping pipeline. It attempts a standard httpx request first, detects common blocking signals, and retries via Zyte API if needed — returning raw HTML or a clear status on failure.
+The fetcher skill gives Claude the ability to retrieve raw HTML from any URL as part of an automated workflow. Drop the `SKILL.md` into your Claude skills folder and Claude will know when to reach for it, how to run it, and how to handle blocked requests — without any manual prompting.
 
-## Requirements
+It is the first step in the scraping pipeline, designed to hand off directly to the [parser skill](../parser/).
 
-**Python:** 3.10+
+## What it does
 
-**Dependencies:**
+When given a URL, Claude runs `fetcher.py` via httpx. If the site blocks the request, Claude automatically retries using Zyte API. If both attempts fail, Claude reports the failure clearly rather than continuing with incomplete data.
+
+## Installation
+
+Copy the skill folder into your Claude skills directory:
+
+```
+skills/
+└── fetcher/
+    ├── SKILL.md      ← Claude reads this
+    ├── fetcher.py
+    └── .env          ← add your Zyte API key here (optional)
+```
+
+Install the Python dependency:
 
 ```bash
 pip install httpx
 ```
 
-For Zyte API fallback:
-
-```bash
-pip install httpx  # already required above
-```
-
-No additional package is needed for the Zyte API path — requests are made directly via httpx. A valid `ZYTE_API_KEY` is required (see [Configuration](#configuration)).
-
-## Usage
-
-### Standard fetch
-
-```bash
-python fetcher.py <url>
-```
-
-### Zyte API fallback
-
-```bash
-python fetcher.py <url> --zyte
-```
-
-Pass `--zyte` directly if you already know a site is likely to block standard requests, or in response to a `BLOCKED` status from a previous attempt.
-
-## Output
-
-On success, the script prints raw HTML to stdout.
-
-On failure, it prints a status message and exits with a non-zero code:
-
-| Exit code | Meaning |
-|-----------|---------|
-| `0` | Success — HTML printed to stdout |
-| `1` | Request error (network issue, timeout, etc.) |
-| `2` | Blocked — re-run with `--zyte` |
-
-### Blocked detection
-
-The script treats a response as blocked if any of the following are true:
-
-- HTTP status code is `403`, `429`, or `503`
-- Response body is fewer than 200 characters
-- Response body contains any of: `captcha`, `access denied`, `bot detection`, `are you a human`
-
-## Configuration
-
-Zyte API requires an API key. Set it as an environment variable:
-
-```bash
-export ZYTE_API_KEY=your_key_here
-```
-
-Or add it to a `.env` file in the same directory as `fetcher.py`:
+For Zyte API fallback, add your API key to a `.env` file in the skill folder:
 
 ```
 ZYTE_API_KEY=your_key_here
 ```
 
-The script loads `.env` automatically — no additional library required.
+## How Claude uses it
 
-## Examples
+Claude triggers this skill when you ask it to fetch, retrieve, scrape, or get the HTML content of a URL. The `SKILL.md` file defines this behaviour:
 
-Fetch a single page:
-
-```bash
-python fetcher.py https://example.com/product/123
+```markdown
+## When to use
+Use this skill when the user provides one or more URLs and asks you to fetch,
+retrieve, scrape, or get the HTML or page content.
 ```
 
-Pipe HTML directly into a file for downstream processing:
+Once triggered, Claude follows a two-step process:
 
-```bash
-python fetcher.py https://example.com/product/123 > page.html
+1. Attempt a standard httpx request
+2. If the response returns a `BLOCKED` status, retry via Zyte API
+
+Claude surfaces any failure to you explicitly — it will never silently drop a URL and continue.
+
+## Example prompts
+
+```
+Fetch the HTML from https://example.com/product/123
 ```
 
-Retry a blocked URL via Zyte API:
+```
+Get the page content for each of these URLs: [list]
+```
 
-```bash
-python fetcher.py https://example.com/product/123 --zyte > page.html
+```
+Scrape https://example.com and pass the HTML to the parser skill
 ```
 
 ## Pipeline
 
-This script is designed to hand off to the [parser](../parser/) skill. Pass the HTML output to `parser.py` for structured data extraction:
-
-```bash
-python fetcher.py https://example.com/product/123 > page.html
-python ../parser/parser.py page.html
-```
-
-## Files
+The fetcher skill is designed to be used in sequence with the parser skill:
 
 ```
-fetcher/
-├── fetcher.py   # Main script
-├── SKILL.md     # Claude skill definition
-└── .env         # API key (create this yourself, not tracked in git)
+fetcher skill → raw HTML → parser skill → structured JSON
 ```
+
+## Requirements
+
+- Python 3.10+
+- `httpx` (`pip install httpx`)
+- A Zyte API key (only required for the fallback path)
