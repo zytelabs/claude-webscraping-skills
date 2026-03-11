@@ -2,6 +2,16 @@
 
 A collection of claude skills and other tools to assist your web-scraping needs. 
 
+video explanations:
+
+https://youtu.be/HH0Q9OfKLu0
+https://youtu.be/P2HhnFRXm-I
+
+Other reading:
+
+https://www.zyte.com/blog/claude-skills-vs-mcp-vs-web-scraping-copilot/
+https://www.zyte.com/blog/supercharging-web-scraping-with-claude-skills/
+
 ----
 
 #### Other claude tools for web scraping
