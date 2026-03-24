@@ -223,14 +223,7 @@ This skill uses Zyte API to access publicly available product data from e-commer
 
 ## Built with
 
-- [Zyte API](https://www.zyte.com/zyte-api/) — SERP search, product extraction, and image fetching
+- [Zyte API](https://www.zyte.com/zyte-api/) — SERP search, product extraction, and image fetching + all the hard stuff related to web scraping- proxy rotation, javascript rendering and ban management.  
 - [Claude Skills](https://support.anthropic.com/en/articles/11147625-what-are-skills) — Skill framework for orchestration
 - Python 3 + `requests`
 
-## License
-
-MIT
-
----
-
-*Built by [Neha Setia](https://github.com/NehaSetia-DA) — Developer Advocate at [Zyte](https://www.zyte.com)*
