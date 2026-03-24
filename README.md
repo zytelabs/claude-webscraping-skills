@@ -24,3 +24,5 @@ https://www.zyte.com/blog/supercharging-web-scraping-with-claude-skills/
 
 > When Claude encounters a WebFetch failure, it reads the CLAUDE.md instructions and makes a curl request to the Zyte API endpoint. The API returns base64-encoded HTML, which Claude decodes and processes just like it would with a normal WebFetch response. by [Joshua Odmark](https://joshuaodmark.com/)
 
+
+3. [Claude skills vs MCP vs Web Scraping CoPilot](https://www.zyte.com/blog/claude-skills-vs-mcp-vs-web-scraping-copilot/)
